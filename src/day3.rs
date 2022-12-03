@@ -1,3 +1,5 @@
+use itertools::Chunk;
+
 pub fn main() {
     let values: std::collections::HashMap<char, usize> =
         ('a'..='z').chain('A'..='Z').zip(1..).collect();
@@ -30,11 +32,13 @@ fn part_1(input: &[&str], values: &std::collections::HashMap<char, usize>) -> us
 fn part_2(input: &[&str], values: &std::collections::HashMap<char, usize>) -> usize {
     let part2 = input
         .chunks(3)
-        .map(|line| {
-            line[0]
+        .map(|chunks| {
+            chunks
+                .first()
+                .unwrap_or(&"")
                 .chars()
-                .filter(|chr| line[1].contains(*chr))
-                .find(|chr| line[2].contains(*chr))
+                .filter(|chr| chunks.iter().all(|chunk| chunk.contains(*chr)))
+                .next()
                 .and_then(|chr| values.get(&chr))
                 .unwrap_or(&0)
         })
