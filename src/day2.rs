@@ -37,7 +37,7 @@ impl FromStr for Game {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let chrs: Vec<char> = s.chars().collect();
+        let chrs: Vec<char> = s.chars().take(3).collect();
         Ok(Self(chrs[0], chrs[2]))
     }
 }
@@ -49,6 +49,6 @@ pub fn main() {
         .map(Result::unwrap)
         .collect();
 
-    println!("{}", data.iter().map(Game::score_p1).sum::<u64>());
-    println!("{}", data.iter().map(Game::score_p2).sum::<u64>());
+    println!("Part 1: {}", data.iter().map(Game::score_p1).sum::<u64>());
+    println!("Part 2: {}", data.iter().map(Game::score_p2).sum::<u64>());
 }
