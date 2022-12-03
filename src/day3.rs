@@ -16,8 +16,8 @@ pub fn main() {
 fn part_1(input: &[&str], values: &std::collections::HashMap<char, usize>) -> usize {
     input
         .iter()
-        .map(|line| {
-            let (begin, end) = line.split_at(line.len() / 2);
+        .map(|line| line.split_at(line.len() / 2))
+        .map(|(begin, end)| {
             begin
                 .chars()
                 .find(|chr| end.contains(*chr))
