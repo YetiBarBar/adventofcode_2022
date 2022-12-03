@@ -1,5 +1,3 @@
-use itertools::Chunk;
-
 pub fn main() {
     let values: std::collections::HashMap<char, usize> =
         ('a'..='z').chain('A'..='Z').zip(1..).collect();
