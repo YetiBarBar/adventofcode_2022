@@ -7,7 +7,7 @@ pub fn main() {
 }
 
 fn parse_data() -> std::collections::BinaryHeap<u64> {
-    let calories = include_str!("../data/day_2022_1.data")
+    include_str!("../data/day_2022_1.data")
         .split("\n\n")
         .map(|block| {
             block
@@ -16,6 +16,5 @@ fn parse_data() -> std::collections::BinaryHeap<u64> {
                 .map(Result::unwrap)
                 .sum::<u64>()
         })
-        .collect();
-    calories
+        .collect()
 }
