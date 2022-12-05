@@ -1,24 +1,31 @@
-use adventofcode_tooling::AocError;
-use std::str::FromStr;
+use nom::{
+    character::complete::{char, u64},
+    combinator::map,
+    multi::separated_list0,
+    sequence::separated_pair,
+    IResult,
+};
 
-struct Segment {
-    begin: u32,
-    end: u32,
+fn segment_from_str(data: &str) -> IResult<&str, Segment> {
+    map(separated_pair(u64, char('-'), u64), |(begin, end)| {
+        Segment { begin, end }
+    })(data)
 }
 
-impl FromStr for Segment {
-    type Err = AocError;
+fn segment_pair_from_str(data: &str) -> IResult<&str, SegmentPair> {
+    map(
+        separated_pair(segment_from_str, char(','), segment_from_str),
+        |(pair1, pair2)| SegmentPair(pair1, pair2),
+    )(data)
+}
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let Some((begin, end)) = s.split_once('-') else {
-            return Err(AocError::ParsingError);
-        };
+fn segment_pair_vect(data: &str) -> IResult<&str, Vec<SegmentPair>> {
+    separated_list0(char('\n'), segment_pair_from_str)(data)
+}
 
-        Ok(Self {
-            begin: begin.parse()?,
-            end: end.parse()?,
-        })
-    }
+struct Segment {
+    begin: u64,
+    end: u64,
 }
 
 impl Segment {
@@ -43,29 +50,16 @@ impl SegmentPair {
     }
 }
 
-impl FromStr for SegmentPair {
-    type Err = ();
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let (one, two) = s.split_once(',').unwrap();
-        Ok(Self(one.parse().unwrap(), two.parse().unwrap()))
-    }
-}
-
 pub fn main() {
-    let data: Vec<SegmentPair> = include_str!("../data/day_2022_4.data")
-        .lines()
-        .map(str::parse)
-        .map(Result::unwrap)
-        .collect();
+    if let Ok((_, data)) = segment_pair_vect(include_str!("../data/day_2022_4.data")) {
+        println!(
+            "Part 1: {}",
+            data.iter().filter(|pair| pair.has_inclusion()).count()
+        );
 
-    println!(
-        "Part 1: {}",
-        data.iter().filter(|pair| pair.has_inclusion()).count()
-    );
-
-    println!(
-        "Part 2: {}",
-        data.iter().filter(|pair| pair.has_overlap()).count()
-    );
+        println!(
+            "Part 2: {}",
+            data.iter().filter(|pair| pair.has_overlap()).count()
+        );
+    }
 }

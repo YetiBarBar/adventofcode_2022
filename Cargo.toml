@@ -110,4 +110,4 @@ bytecount = "0.6.2"
 itertools = "0.10.3"
 hashbrown = "0.13.0"
 adventofcode-tooling = { path = "../adventofcode-tooling/"}
-
+nom = "7"
