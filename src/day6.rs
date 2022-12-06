@@ -12,7 +12,7 @@ fn answer(data: &[char], len: usize) -> usize {
     data.windows(len)
         .enumerate()
         .find(|(_, win)| win.iter().collect::<HashSet<_>>().len() == len)
-        .unwrap()
-        .0
+        .map(|(v, _)| v)
+        .unwrap_or_default()
         + len
 }
