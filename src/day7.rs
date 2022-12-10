@@ -47,20 +47,18 @@ fn main() {
     let mut current: Option<usize> = None;
     let raw = include_str!("../data/day_2022_7.data");
     for line in raw.lines() {
-        let splited: Vec<&str> = line.split(" ").collect();
-        match splited[0] {
-            "$" => match splited[1] {
-                "cd" => match splited[2] {
-                    ".." => {
+        let splited: Vec<&str> = line.split(' ').collect();
+        match splited.first() {
+            Some(&"$") => {
+                if splited.get(1) == Some(&"cd") {
+                    if let Some(&"..") = splited.get(2) {
                         current = tree.node(current).parent;
-                    }
-                    _ => {
+                    } else {
                         current = tree.add_node(0, current);
                     }
-                },
-                _ => {}
-            },
-            "dir" => {}
+                }
+            }
+            Some(&"dir") => {}
             _ => {
                 tree.add_node(splited[0].parse::<usize>().unwrap(), current);
             }
@@ -79,7 +77,7 @@ fn main() {
         .sum();
     println!("Part1 : {}", part1);
 
-    let to_delete = 30000000 - (70000000 - tree[0].value);
+    let to_delete = 30_000_000 - (70_000_000 - tree[0].value);
     let part2 = dirs
         .iter()
         .filter(|node| node.value >= to_delete)
