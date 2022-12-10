@@ -49,13 +49,10 @@ impl<'a> Iterator for SignalHandler<'a> {
 }
 
 pub fn main() {
-    let step1_iter = SignalHandler::new(include_str!("../data/day_2022_10.data"));
-    let vals: Vec<_> = (1_usize..221).zip(step1_iter).collect();
-    let res: isize = vals
-        .iter()
-        .filter(|v| [20, 60, 100, 140, 180, 220].contains(&v.0))
-        .map(|&(x, y)| isize::try_from(x).unwrap() * y)
-        .sum();
+    let mut step1_iter = SignalHandler::new(include_str!("../data/day_2022_10.data"));
+    let res = (1..6).fold(step1_iter.by_ref().nth(19).unwrap() * 20, |acc, idx| {
+        acc + step1_iter.by_ref().nth(39).unwrap() * (20 + 40 * idx)
+    });
 
     println!("Part 1: {}", res);
 
