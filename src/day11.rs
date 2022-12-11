@@ -143,8 +143,8 @@ fn part1_play_monkey_turn(idx: usize, monkeys: &mut HashMap<usize, Monkey>) {
     monkey_turn(idx, monkeys, |x| x / 3);
 }
 
-fn part2_play_monkey_turn(idx: usize, monkeys: &mut HashMap<usize, Monkey>, gcd: u64) {
-    monkey_turn(idx, monkeys, |x| x % gcd);
+fn part2_play_monkey_turn(idx: usize, monkeys: &mut HashMap<usize, Monkey>, lcm: u64) {
+    monkey_turn(idx, monkeys, |x| x % lcm);
 }
 
 fn part1_turn(monkeys: &mut HashMap<usize, Monkey>) {
@@ -154,8 +154,12 @@ fn part1_turn(monkeys: &mut HashMap<usize, Monkey>) {
 }
 
 fn part2_turn(monkeys: &mut HashMap<usize, Monkey>) {
-    let gcd = monkeys.values().map(|m| m.test_modulo).product();
+    let lcm = monkeys
+        .values()
+        .map(|m| m.test_modulo)
+        .reduce(|x, y| num::integer::lcm(x, y))
+        .unwrap_or_default();
     for idx in 0..monkeys.len() {
-        part2_play_monkey_turn(idx, monkeys, gcd);
+        part2_play_monkey_turn(idx, monkeys, lcm);
     }
 }
