@@ -1,5 +1,5 @@
 use nom::{
-    character::complete::{char, u64},
+    character::complete::{char, newline, u64},
     combinator::map,
     multi::separated_list0,
     sequence::separated_pair,
@@ -20,7 +20,7 @@ fn segment_pair_from_str(data: &str) -> IResult<&str, SegmentPair> {
 }
 
 fn segment_pair_vect(data: &str) -> IResult<&str, Vec<SegmentPair>> {
-    separated_list0(char('\n'), segment_pair_from_str)(data)
+    separated_list0(newline, segment_pair_from_str)(data)
 }
 
 struct Segment {
