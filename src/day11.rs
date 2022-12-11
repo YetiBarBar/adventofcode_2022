@@ -5,7 +5,7 @@ use nom::{
     branch::alt,
     bytes::complete::tag,
     character::complete::{newline, space0, u64, u8},
-    combinator::map,
+    combinator::{map, value},
     multi::separated_list0,
     sequence::{delimited, pair, preceded, terminated, tuple},
     IResult,
@@ -36,21 +36,20 @@ impl Display for Monkey {
 }
 
 fn parse_operation(data: &str) -> IResult<&str, Operation> {
-    if data.starts_with("  Operation: new = old * old") {
-        Ok((
-            data.trim_start_matches("  Operation: new = old * old"),
+    alt((
+        map(
+            preceded(pair(space0, tag("Operation: new = old + ")), u64),
+            Operation::Add,
+        ),
+        map(
+            preceded(pair(space0, tag("Operation: new = old * ")), u64),
+            Operation::Mult,
+        ),
+        value(
             Operation::Pow,
-        ))
-    } else {
-        alt((
-            map(preceded(tag("  Operation: new = old + "), u64), |v| {
-                Operation::Add(v)
-            }),
-            map(preceded(tag("  Operation: new = old * "), u64), |v| {
-                Operation::Mult(v)
-            }),
-        ))(data)
-    }
+            pair(space0, tag("Operation: new = old * old")),
+        ),
+    ))(data)
 }
 
 fn parse_monkey(data: &str) -> IResult<&str, Monkey> {
