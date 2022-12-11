@@ -4,7 +4,7 @@ use hashbrown::HashMap;
 use nom::{
     branch::alt,
     bytes::complete::tag,
-    character::complete::{char, newline, space0, u64, u8},
+    character::complete::{newline, space0, u64, u8},
     combinator::map,
     multi::separated_list0,
     sequence::{delimited, pair, preceded, terminated, tuple},
@@ -81,7 +81,7 @@ fn parse_monkey(data: &str) -> IResult<&str, Monkey> {
 
 pub fn main() {
     let monkeys_parsed =
-        separated_list0(tag("\n"), parse_monkey)(include_str!("../data/day_2022_11.data"))
+        separated_list0(newline, parse_monkey)(include_str!("../data/day_2022_11.data"))
             .unwrap()
             .1
             .into_iter()
@@ -162,7 +162,7 @@ fn part2_turn(monkeys: &mut HashMap<usize, Monkey>) {
     let lcm = monkeys
         .values()
         .map(|m| m.test_modulo)
-        .reduce(|x, y| num::integer::lcm(x, y))
+        .reduce(num::integer::lcm)
         .unwrap_or_default();
     for idx in 0..monkeys.len() {
         part2_play_monkey_turn(idx, monkeys, lcm);
