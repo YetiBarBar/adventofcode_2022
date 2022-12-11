@@ -4,10 +4,10 @@ use hashbrown::HashMap;
 use nom::{
     branch::alt,
     bytes::complete::tag,
-    character::complete::{char, u64, u8},
+    character::complete::{char, space0, u64, u8},
     combinator::map,
     multi::separated_list0,
-    sequence::{delimited, preceded, terminated, tuple},
+    sequence::{delimited, pair, preceded, terminated, tuple},
     IResult,
 };
 
@@ -58,14 +58,22 @@ fn parse_monkey(data: &str) -> IResult<&str, Monkey> {
         tuple((
             delimited(tag("Monkey "), u8, tag(":\n")),
             delimited(
-                tag("  Starting items: "),
+                pair(space0, tag("Starting items: ")),
                 separated_list0(tag(", "), u64),
                 char('\n'),
             ),
             terminated(parse_operation, char('\n')),
-            delimited(tag("  Test: divisible by "), u64, char('\n')),
-            delimited(tag("    If true: throw to monkey "), u8, char('\n')),
-            delimited(tag("    If false: throw to monkey "), u8, char('\n')),
+            delimited(pair(space0, tag("Test: divisible by ")), u64, char('\n')),
+            delimited(
+                pair(space0, tag("If true: throw to monkey ")),
+                u8,
+                char('\n'),
+            ),
+            delimited(
+                pair(space0, tag("If false: throw to monkey ")),
+                u8,
+                char('\n'),
+            ),
         )),
         |(id, items, operation, test_modulo, dest_true, dest_false)| Monkey {
             id: id.into(),
@@ -87,6 +95,11 @@ pub fn main() {
             .into_iter()
             .map(|monkey| (monkey.id, monkey))
             .collect::<HashMap<usize, Monkey>>();
+
+    // Regarding data, we know we must have 8 Monkey
+    // so we check here
+    // we could have checked that the IResult "remaining string" is "\n"
+    assert!(monkeys_parsed.len() == 8);
 
     let mut monkeys = monkeys_parsed.clone();
     for _ in 0..20 {
