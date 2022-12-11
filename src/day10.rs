@@ -50,6 +50,7 @@ impl<'a> Iterator for SignalHandler<'a> {
 
 pub fn main() {
     let mut step1_iter = SignalHandler::new(include_str!("../data/day_2022_10.data"));
+
     let res = (1..6).fold(step1_iter.by_ref().nth(19).unwrap() * 20, |acc, idx| {
         acc + step1_iter.by_ref().nth(39).unwrap() * (20 + 40 * idx)
     });
