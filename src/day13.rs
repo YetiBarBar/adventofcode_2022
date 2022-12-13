@@ -50,12 +50,6 @@ impl PartialOrd for Packet {
     }
 }
 
-impl Ord for Packet {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.partial_cmp(other).unwrap()
-    }
-}
-
 pub fn main() {
     let packets =
         separated_list1(tag("\n\n"), parse_pairs)(include_str!("../data/day_2022_13.data"));
