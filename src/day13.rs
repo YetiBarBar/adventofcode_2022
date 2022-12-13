@@ -70,7 +70,7 @@ pub fn main() {
 
     println!("Part 1: {}", part1);
 
-    let mut packets = packets
+    let packets = packets
         .into_iter()
         .flat_map(std::iter::IntoIterator::into_iter)
         .collect::<Vec<_>>();
@@ -78,12 +78,10 @@ pub fn main() {
     let v2 = parse_packet("[[2]]").unwrap().1;
     let v6 = parse_packet("[[6]]").unwrap().1;
 
-    packets.push(v2.clone());
-    packets.push(v6.clone());
-    packets.sort();
-
-    let p2 = packets.iter().zip(1..).find(|(v, _)| v >= &&v2).unwrap().1;
-    let p6 = packets.iter().zip(1..).find(|(v, _)| v >= &&v6).unwrap().1;
+    // Add 1 as we count packets lower than p2, p2 is next!
+    let p2 = packets.iter().filter(|p| p < &&v2).count() + 1;
+    // Add 2 as we also count p2
+    let p6 = packets.iter().filter(|p| p < &&v6).count() + 2;
 
     println!("Part 2: {}", p2 * p6);
 }
