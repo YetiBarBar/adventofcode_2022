@@ -1,4 +1,5 @@
 use adventofcode_tooling::Matrix2D;
+use adventofcode_tooling::Part;
 use hashbrown::HashSet;
 
 pub fn main() {
@@ -23,8 +24,8 @@ pub fn main() {
 
     matrix.values[e_pos] = 'z';
 
-    let e_pos = (e_pos % matrix.width, e_pos / matrix.width);
-    let s_pos = matrix
+    let exit_position = (e_pos % matrix.width, e_pos / matrix.width);
+    let start_position = matrix
         .values
         .iter()
         .enumerate()
@@ -32,11 +33,17 @@ pub fn main() {
         .map(|(idx, _)| idx)
         .unwrap();
 
-    matrix.values[s_pos] = 'a';
-    let s_pos = (s_pos % matrix.width, s_pos / matrix.width);
+    matrix.values[start_position] = 'a';
+    let s_pos = (start_position % matrix.width, start_position / matrix.width);
 
-    println!("Part 1: {}", bfs(e_pos, s_pos, &matrix, false));
-    println!("Part 2: {}", bfs(e_pos, s_pos, &matrix, true));
+    println!(
+        "Part 1: {}",
+        bfs(exit_position, s_pos, &matrix, &Part::Part1)
+    );
+    println!(
+        "Part 2: {}",
+        bfs(exit_position, s_pos, &matrix, &Part::Part2)
+    );
 }
 
 fn adjacents(
@@ -78,7 +85,7 @@ fn bfs(
     source: (usize, usize),
     destination: (usize, usize),
     marble: &Matrix2D<char>,
-    part2: bool,
+    part: &Part,
 ) -> usize {
     let mut steps = 0_usize;
     let mut visited: HashSet<(usize, usize)> = [source].iter().copied().collect();
@@ -87,7 +94,7 @@ fn bfs(
     while !visited.contains(&destination) {
         steps += 1;
         current = adjacents(&current, marble);
-        if part2 && current.iter().any(|(x, y)| marble.get(*x, *y) == Some('a')) {
+        if part == &Part::Part2 && current.iter().any(|(x, y)| marble.get(*x, *y) == Some('a')) {
             break;
         }
         for pts in &current {

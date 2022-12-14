@@ -1,4 +1,4 @@
-use adventofcode_tooling::Matrix2D;
+use adventofcode_tooling::{Matrix2D, Part};
 use nom::{
     bytes::complete::tag,
     character::complete::{char, newline, u32},
@@ -7,11 +7,6 @@ use nom::{
     sequence::separated_pair,
     IResult,
 };
-
-enum Part {
-    Part1,
-    Part2,
-}
 
 #[derive(Debug)]
 struct Segment {
