@@ -83,17 +83,17 @@ fn fall_point(matrix: &mut Matrix2D<char>, part: &Part) -> bool {
     false
 }
 
-fn run_part(segments: &[Segment], ymax: usize, part: Part) -> usize {
+fn run_part(segments: &[Segment], ymax: usize, part: &Part) -> usize {
     // Let's fill a matrix with walls!
     let mut matrix = Matrix2D {
         width: 1000,
         height: ymax as usize + 3,
         values: vec![' '; 1000 * (ymax as usize + 3)],
     };
-    fill_matrix(&mut matrix, &segments);
+    fill_matrix(&mut matrix, segments);
 
     let mut count = 0;
-    while fall_point(&mut matrix, &part) {
+    while fall_point(&mut matrix, part) {
         count += 1;
     }
     count
@@ -113,10 +113,10 @@ pub fn main() {
 
     println!(
         "Part 1: {}",
-        run_part(&segments, ymax as usize, Part::Part1)
+        run_part(&segments, ymax as usize, &Part::Part1)
     );
     println!(
         "Part 2: {}",
-        run_part(&segments, ymax as usize, Part::Part2)
+        run_part(&segments, ymax as usize, &Part::Part2)
     );
 }
