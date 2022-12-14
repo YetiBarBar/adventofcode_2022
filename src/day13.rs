@@ -2,9 +2,9 @@ use nom::{
     branch::alt,
     bytes::complete::tag,
     character::complete::{char, newline, u32},
-    combinator::map,
+    combinator::{all_consuming, map},
     multi::{separated_list0, separated_list1},
-    sequence::{delimited, separated_pair},
+    sequence::{delimited, separated_pair, terminated},
     IResult,
 };
 
@@ -51,8 +51,10 @@ impl PartialOrd for Packet {
 }
 
 pub fn main() {
-    let packets =
-        separated_list1(tag("\n\n"), parse_pairs)(include_str!("../data/day_2022_13.data"));
+    let packets = all_consuming(terminated(
+        separated_list1(tag("\n\n"), parse_pairs),
+        newline,
+    ))(include_str!("../data/day_2022_13.data"));
     let packets = packets.unwrap().1;
 
     let part1 = packets
