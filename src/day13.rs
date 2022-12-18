@@ -4,7 +4,7 @@ use nom::{
     character::complete::{char, newline, u32},
     combinator::{all_consuming, map},
     multi::{separated_list0, separated_list1},
-    sequence::{delimited, separated_pair, terminated},
+    sequence::{delimited, separated_pair},
     IResult,
 };
 
