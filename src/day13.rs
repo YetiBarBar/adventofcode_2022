@@ -51,10 +51,9 @@ impl PartialOrd for Packet {
 }
 
 pub fn main() {
-    let packets = all_consuming(terminated(
-        separated_list1(tag("\n\n"), parse_pairs),
-        newline,
-    ))(include_str!("../data/day_2022_13.data"));
+    let packets = all_consuming(separated_list1(tag("\n\n"), parse_pairs))(
+        include_str!("../data/day_2022_13.data").trim(),
+    );
     let packets = packets.unwrap().1;
 
     let part1 = packets
