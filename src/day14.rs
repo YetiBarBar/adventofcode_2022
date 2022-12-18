@@ -48,7 +48,7 @@ fn fill_matrix(matrix: &mut Matrix2D<char>, segments: &[Segment]) {
     }
 }
 
-fn fall_point(matrix: &mut Matrix2D<char>, part: &Part) -> bool {
+fn fall_point(matrix: &mut Matrix2D<char>, part: Part) -> bool {
     let part2 = matches!(part, Part::Part2);
     let (mut coord_x, mut coord_y) = (500, 0);
     loop {
@@ -78,7 +78,7 @@ fn fall_point(matrix: &mut Matrix2D<char>, part: &Part) -> bool {
     false
 }
 
-fn run_part(segments: &[Segment], ymax: usize, part: &Part) -> usize {
+fn run_part(segments: &[Segment], ymax: usize, part: Part) -> usize {
     // Let's fill a matrix with walls!
     let mut matrix = Matrix2D {
         width: 1000,
@@ -108,10 +108,10 @@ pub fn main() {
 
     println!(
         "Part 1: {}",
-        run_part(&segments, ymax as usize, &Part::Part1)
+        run_part(&segments, ymax as usize, Part::Part1)
     );
     println!(
         "Part 2: {}",
-        run_part(&segments, ymax as usize, &Part::Part2)
+        run_part(&segments, ymax as usize, Part::Part2)
     );
 }

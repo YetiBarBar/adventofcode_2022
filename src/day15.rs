@@ -37,7 +37,7 @@ impl Sensor {
             }
         }
     }
-    fn coverage_line_part2(&self, line_number: i64, occupied: &mut [bool; 4_000_000]) {
+    fn coverage_line_part2(&self, line_number: i64, occupied: &mut [bool]) {
         // On a single line
         let mut delta = (self.position.1 - line_number).abs();
 
@@ -93,7 +93,7 @@ pub fn main() {
     println!("Part 1: {}", occupied.len());
     println!("Warning! More than 1 hour run...");
     for y in 0..4_000_000 {
-        let mut occupied: [bool; 4_000_000] = [false; 4_000_000];
+        let mut occupied = vec![false; 4_000_000];
 
         for sensor in &sensors {
             sensor.coverage_line_part2(y, &mut occupied);
@@ -110,20 +110,4 @@ pub fn main() {
             break;
         }
     }
-    /*
-    let y = 2906101;
-    let mut occupied: [bool; 4_000_000] = [false; 4_000_000];
-
-    for sensor in &sensors {
-        sensor.coverage_line_part2(y, &mut occupied);
-    }
-
-    let x = occupied
-        .iter()
-        .enumerate()
-        .find(|(_, x)| **x == false)
-        .map(|(x, _)| x)
-        .unwrap();
-    // Too low: 4000000 => 13213082906101
-    println!("Part 2: {}", x as u128 * 4000000 + y as u128); */
 }
