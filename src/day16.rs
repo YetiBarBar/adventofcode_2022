@@ -1,8 +1,9 @@
+use hashbrown::HashMap;
 use nom::{
     branch::alt,
     bytes::complete::tag,
     character::complete::{alpha0, alpha1, char, newline, space1, u64},
-    combinator::map,
+    combinator::{all_consuming, map},
     multi::{separated_list0, separated_list1},
     sequence::{delimited, preceded, tuple},
     IResult,
@@ -39,10 +40,60 @@ fn valve(data: &str) -> IResult<&str, Valve> {
     )(data)
 }
 
-const DURATION: usize = 30;
-
 pub fn main() {
-    let valve = separated_list1(newline, valve)(include_str!("../data/day_2022_16.data")).unwrap();
+    let valve = all_consuming(separated_list1(newline, valve))(
+        include_str!("../data/day_2022_16_s.data").trim(),
+    )
+    .unwrap()
+    .1;
 
-    println!("{:#?}", valve.1);
+    let valve: HashMap<&str, Valve> = valve.into_iter().map(|v| (v.name, v)).collect();
+
+    let mut cache = HashMap::new();
+    let part1 = dfs("AA", &valve, &vec![], 29, &mut cache);
+    println!("Part 1: {}", part1);
+}
+
+fn dfs(
+    current: &str,
+    world: &HashMap<&str, Valve>,
+    used: &[&str],
+    level: u64,
+    cache: &mut HashMap<(String, u64), u64>,
+) -> u64 {
+    println!("Level: {} - Valve: {}", level, current);
+    if level == 0 {
+        return 0;
+    }
+    /*    if let Some(cached) = cache.get(&(current.to_string(), level)) {
+        return *cached;
+    } */
+    let curr = world.get(&current).unwrap();
+    let res = if level > 1 && !used.contains(&current) {
+        let mut new_used = used.clone().to_vec();
+        new_used.push(current);
+        (curr.rate * (level - 1)
+            + curr
+                .connected_valve
+                .iter()
+                .map(|&valve_name| dfs(valve_name, world, &new_used, level - 2, cache))
+                .max()
+                .unwrap())
+        .max(
+            curr.connected_valve
+                .iter()
+                .map(|&valve_name| dfs(valve_name, world, used, level - 1, cache))
+                .max()
+                .unwrap(),
+        )
+    } else {
+        curr.connected_valve
+            .iter()
+            .map(|&valve_name| dfs(valve_name, world, used, level - 1, cache))
+            .max()
+            .unwrap()
+    };
+    cache.insert((current.to_string(), level), res);
+    println!("{} at level {} produces : {}", current, level, res);
+    res
 }

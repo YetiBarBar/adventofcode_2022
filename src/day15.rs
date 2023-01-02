@@ -87,7 +87,7 @@ pub fn main() {
     let mut occupied: HashSet<i64> = HashSet::new();
 
     for sensor in &sensors {
-        occupied.extend(sensor.coverage_line(2000000).iter());
+        occupied.extend(sensor.coverage_line(2_000_000).iter());
     }
 
     println!("Part 1: {}", occupied.len());
@@ -103,10 +103,10 @@ pub fn main() {
             let x = occupied
                 .iter()
                 .enumerate()
-                .find(|(_, x)| **x == false)
+                .find(|(_, x)| !(**x))
                 .map(|(x, _)| x)
                 .unwrap();
-            println!("Part 2: {}", x as u128 * 4000000 + y as u128);
+            println!("Part 2: {}", x as i128 * 4_000_000 + i128::from(y));
             break;
         }
     }
