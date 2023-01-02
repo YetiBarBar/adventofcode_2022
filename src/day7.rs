@@ -75,7 +75,7 @@ fn main() {
         .filter(|node| node.value <= 100_000)
         .map(|node| node.value)
         .sum();
-    println!("Part1 : {}", part1);
+    println!("Part1 : {part1}");
 
     let to_delete = 30_000_000 - (70_000_000 - tree[0].value);
     let part2 = dirs
@@ -84,5 +84,5 @@ fn main() {
         .map(|node| node.value)
         .min()
         .unwrap();
-    println!("Part2 : {}", part2);
+    println!("Part2 : {part2}");
 }

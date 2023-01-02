@@ -98,7 +98,7 @@ pub fn main() {
     }
 
     let res = result_value(&monkeys);
-    println!("Part 1: {}", res);
+    println!("Part 1: {res}");
 
     let mut monkeys = monkeys_parsed;
     for _ in 0..10_000 {

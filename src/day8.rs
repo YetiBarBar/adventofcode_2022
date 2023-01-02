@@ -22,13 +22,13 @@ pub fn main() {
     };
     let visible_count = part_1(&matrix);
 
-    println!("Part 1: {}", visible_count);
+    println!("Part 1: {visible_count}");
 
     let part2 = (0..matrix.values.len())
         .map(|position| (position % matrix.width, position / matrix.width))
         .map(|(x, y)| tree_scenic(&matrix, x, y))
         .max();
-    println!("Part 2: {:?}", part2);
+    println!("Part 2: {part2:?}");
 }
 
 fn part_1(matrix: &Matrix2D<u32>) -> i32 {

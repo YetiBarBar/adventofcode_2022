@@ -50,8 +50,8 @@ pub fn main() {
     let valve: HashMap<&str, Valve> = valve.into_iter().map(|v| (v.name, v)).collect();
 
     let mut cache = HashMap::new();
-    let part1 = dfs("AA", &valve, &vec![], 29, &mut cache);
-    println!("Part 1: {}", part1);
+    let part1 = dfs("AA", &valve, &[], 29, &mut cache);
+    println!("Part 1: {part1}");
 }
 
 fn dfs(
@@ -61,7 +61,7 @@ fn dfs(
     level: u64,
     cache: &mut HashMap<(String, u64), u64>,
 ) -> u64 {
-    println!("Level: {} - Valve: {}", level, current);
+    println!("Level: {level} - Valve: {current}");
     if level == 0 {
         return 0;
     }
@@ -94,6 +94,6 @@ fn dfs(
             .unwrap()
     };
     cache.insert((current.to_string(), level), res);
-    println!("{} at level {} produces : {}", current, level, res);
+    println!("{current} at level {level} produces : {res}");
     res
 }

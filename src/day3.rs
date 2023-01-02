@@ -7,10 +7,10 @@ pub fn main() {
         .collect::<Vec<_>>();
 
     let part1 = part_1(&input, &values);
-    println!("Part 1: {}", part1);
+    println!("Part 1: {part1}");
 
     let part2 = part_2(&input, &values);
-    println!("Part 2: {}", part2);
+    println!("Part 2: {part2}");
 }
 
 fn part_1(input: &[&str], values: &std::collections::HashMap<char, usize>) -> usize {

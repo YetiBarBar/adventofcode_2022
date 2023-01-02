@@ -82,8 +82,8 @@ fn run_part(segments: &[Segment], ymax: usize, part: Part) -> usize {
     // Let's fill a matrix with walls!
     let mut matrix = Matrix2D {
         width: 1000,
-        height: ymax as usize + 3,
-        values: vec![' '; 1000 * (ymax as usize + 3)],
+        height: ymax + 3,
+        values: vec![' '; 1000 * (ymax + 3)],
     };
     fill_matrix(&mut matrix, segments);
 

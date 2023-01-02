@@ -42,7 +42,7 @@ impl Sensor {
         let mut delta = (self.position.1 - line_number).abs();
 
         if delta > self.manhattan_coverage {
-            ()
+            
         } else {
             delta = self.manhattan_coverage - delta;
             let start = self.position.0 - delta;

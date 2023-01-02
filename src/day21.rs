@@ -10,7 +10,7 @@ enum Operator {
 }
 
 impl Operator {
-    fn get_value(&self, v1: i64, v2: i64) -> i64 {
+    fn get_value(self, v1: i64, v2: i64) -> i64 {
         match self {
             Operator::Add => v1 + v2,
             Operator::Sub => v1 - v2,
@@ -19,7 +19,7 @@ impl Operator {
         }
     }
 
-    fn reverted_op(&self) -> Operator {
+    fn reverted_op(self) -> Operator {
         match self {
             Operator::Add => Operator::Sub,
             Operator::Sub => Operator::Add,
@@ -81,9 +81,10 @@ fn parse(data: &str) -> (Vec<Monkey>, usize, usize) {
         data.lines()
             .map(|line| {
                 let (_, definition) = line.split_once(": ").unwrap();
-                match definition.parse::<i64>() {
-                    Ok(c) => Monkey::Const(c),
-                    Err(_) => {
+                if let Ok(c) = definition.parse::<i64>() {
+                    Monkey::Const(c)
+                } else {
+                    {
                         let mut parts = definition.split(' ');
                         let i1 = id_to_index.get(parts.next().unwrap()).unwrap();
                         let operator = match parts.next().unwrap() {
@@ -121,7 +122,7 @@ pub fn main() {
 
     while let Some((i, expected)) = q.pop_front() {
         if i == humn_index {
-            println!("Part 2: {}", expected);
+            println!("Part 2: {expected}");
             break;
         }
 

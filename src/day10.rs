@@ -55,7 +55,7 @@ pub fn main() {
         acc + step1_iter.by_ref().nth(39).unwrap() * (20 + 40 * idx)
     });
 
-    println!("Part 1: {}", res);
+    println!("Part 1: {res}");
 
     let step2_iter = SignalHandler::new(include_str!("../data/day_2022_10.data"));
     let res = step2_iter

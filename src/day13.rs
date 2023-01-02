@@ -63,7 +63,7 @@ pub fn main() {
         .map(|(_, v)| v)
         .sum::<u32>();
 
-    println!("Part 1: {}", part1);
+    println!("Part 1: {part1}");
 
     let v2 = parse_packet("[[2]]").unwrap().1;
     let v6 = parse_packet("[[6]]").unwrap().1;

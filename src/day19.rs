@@ -1,9 +1,9 @@
 use nom::{
     bytes::complete::tag,
-    character::complete::{char, newline, u32},
+    character::complete::{newline, u32},
     combinator::{all_consuming, map},
     multi::separated_list0,
-    sequence::{delimited, preceded, separated_pair, tuple},
+    sequence::{delimited, preceded, tuple},
     IResult,
 };
 
@@ -55,5 +55,5 @@ pub fn main() {
         .unwrap()
         .1;
 
-    println!("{:?}", blueprints);
+    println!("{blueprints:?}");
 }

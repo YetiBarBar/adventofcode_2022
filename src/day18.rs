@@ -51,7 +51,7 @@ pub fn main() {
         .1;
 
     let part1 = part1(&blocks);
-    println!("Part 1: {}", part1);
+    println!("Part 1: {part1}");
     println!("Part 2: {}", part2(&blocks));
 }
 
