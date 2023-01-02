@@ -112,3 +112,4 @@ hashbrown = "0.13.0"
 adventofcode-tooling = { path = "../adventofcode-tooling/"}
 nom = "7"
 num = "0.4.0"
+
