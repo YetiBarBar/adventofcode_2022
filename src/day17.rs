@@ -31,7 +31,7 @@ static ROCKS: [[[u8; 4]; 4]; 5] = [
     ],
 ];
 
-fn collision(rock: &[[u8; 4]; 4], x: usize, y: usize, board: &Vec<[u8; 9]>) -> bool {
+fn collision(rock: &[[u8; 4]; 4], x: usize, y: usize, board: &[[u8; 9]]) -> bool {
     for dy in 0..4 {
         for dx in 0..4 {
             if rock[dy][dx] == b'#' && board[y + dy][x + dx] == b'#' {

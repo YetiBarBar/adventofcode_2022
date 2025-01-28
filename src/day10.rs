@@ -18,7 +18,7 @@ impl<'a> SignalHandler<'a> {
     }
 }
 
-impl<'a> Iterator for SignalHandler<'a> {
+impl Iterator for SignalHandler<'_> {
     type Item = isize;
 
     fn next(&mut self) -> Option<Self::Item> {
