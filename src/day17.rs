@@ -88,9 +88,8 @@ fn implementation(input: &str, amount: usize) -> Result<String, String> {
             let new_y = y - 1;
             if collision(rock, x as usize, new_y, &board) {
                 break;
-            } else {
-                y = new_y;
             }
+            y = new_y;
         }
 
         for dy in 0..4 {
