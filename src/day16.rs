@@ -5,8 +5,8 @@ use nom::{
     character::complete::{alpha0, alpha1, char, newline, space1, u64},
     combinator::{all_consuming, map},
     multi::{separated_list0, separated_list1},
-    sequence::{delimited, preceded, tuple},
-    IResult,
+    sequence::{delimited, preceded},
+    IResult, Parser,
 };
 
 #[derive(Debug)]
@@ -18,7 +18,7 @@ struct Valve<'a> {
 
 fn valve(data: &str) -> IResult<&str, Valve> {
     map(
-        tuple((
+        (
             delimited(tag("Valve "), alpha0, space1),
             delimited(tag("has flow rate="), u64, char(';')),
             alt((
@@ -31,21 +31,21 @@ fn valve(data: &str) -> IResult<&str, Valve> {
                     separated_list0(tag(", "), alpha1),
                 ),
             )),
-        )),
+        ),
         |(name, rate, connected_valve)| Valve {
             name,
             rate,
             connected_valve,
         },
-    )(data)
+    )
+    .parse(data)
 }
 
 pub fn main() {
-    let valve = all_consuming(separated_list1(newline, valve))(
-        include_str!("../data/day_2022_16_s.data").trim(),
-    )
-    .unwrap()
-    .1;
+    let valve = all_consuming(separated_list1(newline, valve))
+        .parse(include_str!("../data/day_2022_16_s.data").trim())
+        .unwrap()
+        .1;
 
     let valve: HashMap<&str, Valve> = valve.into_iter().map(|v| (v.name, v)).collect();
 
@@ -61,7 +61,7 @@ fn dfs(
     level: u64,
     cache: &mut HashMap<(String, u64), u64>,
 ) -> u64 {
-    println!("Level: {level} - Valve: {current}");
+    // println!("Level: {level} - Valve: {current}");
     if level == 0 {
         return 0;
     }
@@ -70,7 +70,7 @@ fn dfs(
     } */
     let curr = world.get(&current).unwrap();
     let res = if level > 1 && !used.contains(&current) {
-        let mut new_used = used.clone().to_vec();
+        let mut new_used = used.to_vec();
         new_used.push(current);
         (curr.rate * (level - 1)
             + curr
@@ -94,6 +94,6 @@ fn dfs(
             .unwrap()
     };
     cache.insert((current.to_string(), level), res);
-    println!("{current} at level {level} produces : {res}");
+    // println!("{current} at level {level} produces : {res}");
     res
 }

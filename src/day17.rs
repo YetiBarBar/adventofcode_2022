@@ -45,7 +45,8 @@ fn collision(rock: &[[u8; 4]; 4], x: usize, y: usize, board: &Vec<[u8; 9]>) -> b
 fn find_repeating<T: Eq>(range: &[T]) -> Option<usize> {
     let len = range.len();
 
-    (1.max(len / 3)..len / 2).find(|&sub_len| range[len - sub_len * 2..len - sub_len].eq(&range[len - sub_len..]))
+    (1.max(len / 3)..len / 2)
+        .find(|&sub_len| range[len - sub_len * 2..len - sub_len].eq(&range[len - sub_len..]))
 }
 
 fn implementation(input: &str, amount: usize) -> Result<String, String> {
@@ -128,4 +129,5 @@ fn part2(input: &str) -> Result<String, String> {
 fn main() {
     let input = include_str!("../data/day_2022_17.data").trim();
     println!("{:?}", part1(input));
+    println!("{:?}", part2(input));
 }

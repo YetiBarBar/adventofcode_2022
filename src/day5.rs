@@ -3,18 +3,18 @@ use nom::{
     character::complete::{char, u16},
     combinator::map,
     multi::separated_list0,
-    sequence::tuple,
-    IResult,
+    IResult, Parser,
 };
 
 fn parse_moves(data: &str) -> IResult<&str, Vec<(usize, usize, usize)>> {
     separated_list0(
         char('\n'),
         map(
-            tuple((tag("move "), u16, tag(" from "), u16, tag(" to "), u16)),
+            (tag("move "), u16, tag(" from "), u16, tag(" to "), u16),
             |(_, times, _, start, _, end)| (times.into(), start.into(), end.into()),
         ),
-    )(data)
+    )
+    .parse(data)
 }
 
 pub fn main() {

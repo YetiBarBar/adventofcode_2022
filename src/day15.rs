@@ -4,8 +4,8 @@ use nom::{
     character::complete::{i64, newline},
     combinator::map,
     multi::separated_list0,
-    sequence::{preceded, separated_pair, tuple},
-    IResult,
+    sequence::{preceded, separated_pair},
+    IResult, Parser,
 };
 
 #[derive(Debug)]
@@ -42,7 +42,6 @@ impl Sensor {
         let mut delta = (self.position.1 - line_number).abs();
 
         if delta > self.manhattan_coverage {
-            
         } else {
             delta = self.manhattan_coverage - delta;
             let start = self.position.0 - delta;
@@ -60,29 +59,31 @@ fn position(data: &str) -> IResult<&str, (i64, i64)> {
         preceded(tag("x="), i64),
         tag(", "),
         preceded(tag("y="), i64),
-    )(data)
+    )
+    .parse(data)
 }
 
 fn sensor(data: &str) -> IResult<&str, Sensor> {
     map(
-        tuple((
+        (
             tag("Sensor at "),
             position,
             tag(": closest beacon is at "),
             position,
-        )),
+        ),
         |(_, position, _, nearest_beacon)| Sensor {
             position,
             nearest_beacon,
             manhattan_coverage: (nearest_beacon.0 - position.0).abs()
                 + (nearest_beacon.1 - position.1).abs(),
         },
-    )(data)
+    )
+    .parse(data)
 }
 
 pub fn main() {
     let raw = include_str!("../data/day_2022_15.data");
-    let sensors = separated_list0(newline, sensor)(raw).unwrap().1;
+    let sensors = separated_list0(newline, sensor).parse(raw).unwrap().1;
 
     let mut occupied: HashSet<i64> = HashSet::new();
 

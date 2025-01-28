@@ -5,7 +5,7 @@ use nom::{
     combinator::{all_consuming, map},
     multi::{separated_list0, separated_list1},
     sequence::{delimited, separated_pair},
-    IResult,
+    IResult, Parser,
 };
 
 fn parse_packet(data: &str) -> IResult<&str, Packet> {
@@ -19,14 +19,16 @@ fn parse_packet(data: &str) -> IResult<&str, Packet> {
             ),
             Packet::List,
         ),
-    ))(data)
+    ))
+    .parse(data)
 }
 
 fn parse_pairs(data: &str) -> IResult<&str, [Packet; 2]> {
     map(
         separated_pair(parse_packet, newline, parse_packet),
         |(p1, p2)| [p1, p2],
-    )(data)
+    )
+    .parse(data)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -51,9 +53,8 @@ impl PartialOrd for Packet {
 }
 
 pub fn main() {
-    let packets = all_consuming(separated_list1(tag("\n\n"), parse_pairs))(
-        include_str!("../data/day_2022_13.data").trim(),
-    );
+    let packets = all_consuming(separated_list1(tag("\n\n"), parse_pairs))
+        .parse(include_str!("../data/day_2022_13.data").trim());
     let packets = packets.unwrap().1;
 
     let part1 = packets

@@ -107,9 +107,8 @@ path = "src/day25.rs"
 
 [dependencies]
 bytecount = "0.6.2"
-itertools = "0.10.3"
-hashbrown = "0.13.0"
-adventofcode-tooling = { path = "../adventofcode-tooling/"}
-nom = "7"
+itertools = "0.14"
+hashbrown = "0.15"
+adventofcode-tooling = { path = "../adventofcode-tooling/" }
+nom = "8"
 num = "0.4.0"
-

@@ -3,8 +3,8 @@ use nom::{
     character::complete::{newline, u32},
     combinator::{all_consuming, map},
     multi::separated_list0,
-    sequence::{delimited, preceded, tuple},
-    IResult,
+    sequence::{delimited, preceded},
+    IResult, Parser,
 };
 
 #[derive(Debug)]
@@ -20,7 +20,7 @@ struct BluePrint {
 
 fn blueprint(data: &str) -> IResult<&str, BluePrint> {
     map(
-        tuple((
+        (
             preceded(tag("Blueprint "), u32),
             preceded(tag(": Each ore robot costs "), u32),
             preceded(tag(" ore. Each clay robot costs "), u32),
@@ -28,7 +28,7 @@ fn blueprint(data: &str) -> IResult<&str, BluePrint> {
             preceded(tag("ore and "), u32),
             preceded(tag(" clay. Each geode robot costs "), u32),
             delimited(tag(" ore and "), u32, tag(" obsidian.")),
-        )),
+        ),
         |(
             id,
             ore_robot_ore_cost,
@@ -46,12 +46,14 @@ fn blueprint(data: &str) -> IResult<&str, BluePrint> {
             geode_robot_ore_cost,
             geode_robot_obsidian_cost,
         },
-    )(data)
+    )
+    .parse(data)
 }
 
 pub fn main() {
     let raw = include_str!("../data/day_2022_19.data").trim();
-    let blueprints = all_consuming(separated_list0(newline, blueprint))(raw)
+    let blueprints = all_consuming(separated_list0(newline, blueprint))
+        .parse(raw)
         .unwrap()
         .1;
 

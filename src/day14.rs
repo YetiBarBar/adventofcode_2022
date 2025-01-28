@@ -5,7 +5,7 @@ use nom::{
     combinator::{all_consuming, map},
     multi::separated_list0,
     sequence::separated_pair,
-    IResult,
+    IResult, Parser,
 };
 
 #[derive(Debug)]
@@ -17,7 +17,8 @@ fn segment(data: &str) -> IResult<&str, Segment> {
     map(
         separated_list0(tag(" -> "), separated_pair(u32, char(','), u32)),
         |list| Segment { points: list },
-    )(data)
+    )
+    .parse(data)
 }
 
 fn fill_matrix(matrix: &mut Matrix2D<char>, segments: &[Segment]) {
@@ -96,7 +97,8 @@ fn run_part(segments: &[Segment], ymax: usize, part: Part) -> usize {
 
 pub fn main() {
     let data = include_str!("../data/day_2022_14.data");
-    let segments = all_consuming(separated_list0(newline, segment))(data)
+    let segments = all_consuming(separated_list0(newline, segment))
+        .parse(data)
         .unwrap()
         .1;
 

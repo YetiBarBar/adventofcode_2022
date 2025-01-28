@@ -3,8 +3,7 @@ use nom::{
     character::complete::{char, i32, newline},
     combinator::{all_consuming, map},
     multi::separated_list0,
-    sequence::tuple,
-    IResult,
+    IResult, Parser,
 };
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
@@ -38,15 +37,16 @@ impl LavaBlock {
 }
 
 fn lava_block(data: &str) -> IResult<&str, LavaBlock> {
-    map(
-        tuple((i32, char(','), i32, char(','), i32)),
-        |(x, _, y, _, z)| LavaBlock { x, y, z },
-    )(data)
+    map((i32, char(','), i32, char(','), i32), |(x, _, y, _, z)| {
+        LavaBlock { x, y, z }
+    })
+    .parse(data)
 }
 
 pub fn main() {
     let raw = include_str!("../data/day_2022_18.data").trim();
-    let blocks = all_consuming(separated_list0(newline, lava_block))(raw)
+    let blocks = all_consuming(separated_list0(newline, lava_block))
+        .parse(raw)
         .unwrap()
         .1;
 

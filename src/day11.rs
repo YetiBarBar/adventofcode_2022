@@ -7,8 +7,8 @@ use nom::{
     character::complete::{newline, space0, u64, u8},
     combinator::{map, value},
     multi::separated_list0,
-    sequence::{delimited, pair, preceded, terminated, tuple},
-    IResult,
+    sequence::{delimited, pair, preceded, terminated},
+    IResult, Parser,
 };
 
 #[derive(Debug, Clone, Copy, Hash)]
@@ -49,12 +49,13 @@ fn parse_operation(data: &str) -> IResult<&str, Operation> {
             Operation::Pow,
             pair(space0, tag("Operation: new = old * old")),
         ),
-    ))(data)
+    ))
+    .parse(data)
 }
 
 fn parse_monkey(data: &str) -> IResult<&str, Monkey> {
     map(
-        tuple((
+        (
             delimited(tag("Monkey "), u8, tag(":\n")),
             delimited(
                 pair(space0, tag("Starting items: ")),
@@ -65,7 +66,7 @@ fn parse_monkey(data: &str) -> IResult<&str, Monkey> {
             delimited(pair(space0, tag("Test: divisible by ")), u64, newline),
             delimited(pair(space0, tag("If true: throw to monkey ")), u8, newline),
             delimited(pair(space0, tag("If false: throw to monkey ")), u8, newline),
-        )),
+        ),
         |(id, items, operation, test_modulo, dest_true, dest_false)| Monkey {
             id: id.into(),
             items,
@@ -75,17 +76,18 @@ fn parse_monkey(data: &str) -> IResult<&str, Monkey> {
             dest_false: dest_false.into(),
             inspected: 0_usize,
         },
-    )(data)
+    )
+    .parse(data)
 }
 
 pub fn main() {
-    let monkeys_parsed =
-        separated_list0(newline, parse_monkey)(include_str!("../data/day_2022_11.data"))
-            .unwrap()
-            .1
-            .into_iter()
-            .map(|monkey| (monkey.id, monkey))
-            .collect::<HashMap<usize, Monkey>>();
+    let monkeys_parsed = separated_list0(newline, parse_monkey)
+        .parse(include_str!("../data/day_2022_11.data"))
+        .unwrap()
+        .1
+        .into_iter()
+        .map(|monkey| (monkey.id, monkey))
+        .collect::<HashMap<usize, Monkey>>();
 
     // Regarding data, we know we must have 8 Monkey
     // so we check here

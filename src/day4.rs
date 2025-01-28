@@ -3,24 +3,26 @@ use nom::{
     combinator::map,
     multi::separated_list0,
     sequence::separated_pair,
-    IResult,
+    IResult, Parser,
 };
 
 fn segment_from_str(data: &str) -> IResult<&str, Segment> {
     map(separated_pair(u64, char('-'), u64), |(begin, end)| {
         Segment { begin, end }
-    })(data)
+    })
+    .parse(data)
 }
 
 fn segment_pair_from_str(data: &str) -> IResult<&str, SegmentPair> {
     map(
         separated_pair(segment_from_str, char(','), segment_from_str),
         |(pair1, pair2)| SegmentPair(pair1, pair2),
-    )(data)
+    )
+    .parse(data)
 }
 
 fn segment_pair_vect(data: &str) -> IResult<&str, Vec<SegmentPair>> {
-    separated_list0(newline, segment_pair_from_str)(data)
+    separated_list0(newline, segment_pair_from_str).parse(data)
 }
 
 struct Segment {
